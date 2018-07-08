@@ -10,3 +10,5 @@ deploy:
   provider: gae
   keyfile: baskobot-b8cae21c879b.json
   project: baskobot
+  on:
+    all_branches: true
