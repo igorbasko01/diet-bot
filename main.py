@@ -16,7 +16,16 @@ from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
 import webapp2
 
-TOKEN = ''
+class BotToken(ndb.Model):
+    token = ndb.StringProperty();
+    
+queriedToken = ndb.Key('BotToken', 'dietbottoken').get()
+tokenMessage = 'No token was found !'
+if queriedToken is not None:
+    tokenMessage = 'Token Found !'
+logging.info(tokenMessage)
+
+TOKEN = queriedToken.token
 
 BASE_URL = 'https://api.telegram.org/bot' + TOKEN + '/'
 
