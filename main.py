@@ -17,28 +17,16 @@ from google.appengine.ext import ndb
 import webapp2
 
 import bottoken
+import foodstore
+import myutils
 
 TOKEN = bottoken.get_token()
 
 BASE_URL = 'https://api.telegram.org/bot' + TOKEN + '/'
 
-# ================================
-
-def is_number(s):
-    try:
-        int(s)
-        return True
-    except ValueError:
-        return False
-
-# ================================
-
 class EnableStatus(ndb.Model):
     # key name: str(chat_id)
     enabled = ndb.BooleanProperty(indexed=False, default=False)
-
-
-# ================================
 
 def setEnabled(chat_id, yes):
     es = EnableStatus.get_or_insert(str(chat_id))
@@ -51,45 +39,6 @@ def getEnabled(chat_id):
         return es.enabled
     return False
 
-
-# ================================
-
-# Stores a list of different foods that the user configured.
-# Used as an index, to know which foods exists in the system.
-class FoodsListStore(ndb.Model):
-    listOfNames = ndb.StringProperty()
-
-def showListOfFoods():
-    queryFoodList = ndb.Key('FoodsListStore', 'FoodsList').get()
-    foodList = 'No foods !'
-    if not queryFoodList is None:
-        foodList = queryFoodList.listOfNames
-    return foodList
-
-def addFood(foodName, calories):
-    if not is_number(calories) or int(calories) < 1:
-        return 'Invalid calories ! should be a number greater than 0.'
-
-    result_msg = ''
-
-    # Get list of food names.
-    queryFoodList = ndb.Key('FoodsListStore', 'FoodsList').get()
-    foodsListArray = []
-    if not queryFoodList is None:
-        foodsListArray = queryFoodList.listOfNames.split(',')
-    logging.info('Got food list: ' + str(foodsListArray))
-
-    # add the new food only if its not already in the list.
-    if not foodName in foodsListArray:
-        foodsListArray.append(foodName)
-        foodsListString = ",".join(foodsListArray)
-        foodsList = FoodsListStore(key=ndb.Key('FoodsListStore', 'FoodsList'),listOfNames=foodsListString)
-        foodsList.put()
-        result_msg = 'Food ' + foodName + ' added, calories: ' + str(calories) + '.'
-    else:
-        result_msg = 'Food ' + foodName + ' already exists...'
-
-    return result_msg
 
 # ================================
 
@@ -224,10 +173,10 @@ class WebhookHandler(webapp2.RequestHandler):
                 str_to_reply = 'Didn\'t fully understand. Should be like: /addfood walnut 30'
                 splitText = text.split()
                 if len(splitText) == 3:
-                    str_to_reply = addFood(splitText[1], splitText[2])
+                    str_to_reply = foodstore.addFood(splitText[1], splitText[2])
                 reply(str_to_reply)
             elif text.startswith('/showfoods'):
-                reply(showListOfFoods())
+                reply(foodstore.showListOfFoods())
             else:
                 reply('What command?')
 
@@ -245,7 +194,7 @@ class WebhookHandler(webapp2.RequestHandler):
             logging.info('Inside the update coffee...')
             str_to_reply = '' + name + ', didn\'t quite get the amount...'
             splitText = text.split()
-            if len(splitText) > 3 and is_number(splitText[3]):
+            if len(splitText) > 3 and myutils.is_number(splitText[3]):
                 updateCoffee(name, date, int(splitText[3]))
                 str_to_reply = '' + name + ', the coffee amount was updated.'
             reply(str_to_reply)
