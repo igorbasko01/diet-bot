@@ -11,4 +11,4 @@ deploy:
   keyfile: baskobot-b8cae21c879b.json
   project: baskobot
   on: 
-    branch: feature-split-to-modules
+    branch: feature-split-to-modu
