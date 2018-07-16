@@ -19,26 +19,11 @@ import webapp2
 import bottoken
 import foodstore
 import myutils
+import botenabler
 
 TOKEN = bottoken.get_token()
 
 BASE_URL = 'https://api.telegram.org/bot' + TOKEN + '/'
-
-class EnableStatus(ndb.Model):
-    # key name: str(chat_id)
-    enabled = ndb.BooleanProperty(indexed=False, default=False)
-
-def setEnabled(chat_id, yes):
-    es = EnableStatus.get_or_insert(str(chat_id))
-    es.enabled = yes
-    es.put()
-
-def getEnabled(chat_id):
-    es = EnableStatus.get_by_id(str(chat_id))
-    if es:
-        return es.enabled
-    return False
-
 
 # ================================
 
@@ -156,10 +141,10 @@ class WebhookHandler(webapp2.RequestHandler):
         if text.startswith('/'):
             if text == '/start':
                 reply('Bot enabled')
-                setEnabled(chat_id, True)
+                botenabler.setEnabled(chat_id, True)
             elif text == '/stop':
                 reply('Bot disabled')
-                setEnabled(chat_id, False)
+                botenabler.setEnabled(chat_id, False)
             elif text == '/image':
                 img = Image.new('RGB', (512, 512))
                 base = random.randint(0, 16777216)
@@ -199,7 +184,7 @@ class WebhookHandler(webapp2.RequestHandler):
                 str_to_reply = '' + name + ', the coffee amount was updated.'
             reply(str_to_reply)
         else:
-            if getEnabled(chat_id):
+            if botenabler.getEnabled(chat_id):
                 reply('I got your message! (but I do not know how to answer)')
                 logging.info(text)
             else:
