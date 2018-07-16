@@ -20,51 +20,11 @@ import bottoken
 import foodstore
 import myutils
 import botenabler
+import coffeestore
 
 TOKEN = bottoken.get_token()
 
 BASE_URL = 'https://api.telegram.org/bot' + TOKEN + '/'
-
-# ================================
-
-class CoffeeStore(ndb.Model):
-    timesDrank = ndb.IntegerProperty()
-
-def handleCoffee(name, date):
-    smilies = [u'\ud83d\ude43',u'\ud83d\ude0f',u'\ud83d\ude31',u'\ud83d\ude21']
-    date_got = datetime.datetime.fromtimestamp(int(date)).strftime("%Y-%m-%d")
-    key = '' + name + ':coffee:' + date_got
-    queryCoffee = ndb.Key('CoffeeStore', key).get()
-
-    logging.info('key: ' + key)
-    logging.info('queryCoffee.timesDrank: ' + str(queryCoffee))
-
-    amountDrank = 0
-    if queryCoffee is None:
-        amountDrank = 1
-    else:
-        amountDrank = queryCoffee.timesDrank + 1
-
-    coffeeDrank = CoffeeStore(key=ndb.Key('CoffeeStore', key),timesDrank=amountDrank)
-    coffeeDrank.put()
-
-    if amountDrank == 3:
-        str_to_reply = name + ' drank ' + str(amountDrank) + ' coffee out of ' + str(3) + '\nIt\'s your last one !'
-    elif amountDrank > 3:
-        str_to_reply = name + ' drank ' + str(amountDrank) + ' coffee out of ' + str(3) + '\nPlease don\'t drink anymore...'
-    else:
-        str_to_reply = name + ' drank ' + str(amountDrank) + ' coffee out of ' + str(3) + '.'
-
-    str_to_reply += ' ' + smilies[min(amountDrank-1,len(smilies)-1)]
-    logging.info('reply: ' + str_to_reply)
-    return str_to_reply
-
-def updateCoffee(name, date, amount):
-    date_got = datetime.datetime.fromtimestamp(int(date)).strftime("%Y-%m-%d")
-    key = '' + name + ':coffee:' + date_got
-
-    coffeeDrank = CoffeeStore(key=ndb.Key('CoffeeStore', key),timesDrank=amount)
-    coffeeDrank.put()
 
 # ================================
 
@@ -173,14 +133,14 @@ class WebhookHandler(webapp2.RequestHandler):
             reply('look at the corner of your screen!')
         elif u'\u2615\ufe0f' in text:
             logging.info('Inside the coffee...')
-            str_to_reply = handleCoffee(name, date)
+            str_to_reply = coffeestore.handleCoffee(name, date)
             reply(str_to_reply)
         elif 'baskobot update coffee' in text:
             logging.info('Inside the update coffee...')
             str_to_reply = '' + name + ', didn\'t quite get the amount...'
             splitText = text.split()
             if len(splitText) > 3 and myutils.is_number(splitText[3]):
-                updateCoffee(name, date, int(splitText[3]))
+                coffeestore.updateCoffee(name, date, int(splitText[3]))
                 str_to_reply = '' + name + ', the coffee amount was updated.'
             reply(str_to_reply)
         else:
