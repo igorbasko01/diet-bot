@@ -11,7 +11,7 @@ class Commander:
     def execute(self, cmd):
         logging.info('Going to execute the following command: ' + cmd)
         try:
-            self.commands[cmd]()
+            return self.commands[cmd]()
         except KeyError, e:
             logging.info('Couldn\'t find the following registered command: ' % str(cmd))
         
