@@ -1,7 +1,7 @@
 # diet-bot
 A telegram bot that tracks your diet
 
-# How To run tests
+## How To run tests
 1. Install virtualenv using: `pip install virtualenv`
 1. Create a virtualenv in source folder: `virtualenv .`
 1. Activate virtualenv by: `source bin/activate`
