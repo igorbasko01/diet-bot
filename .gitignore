@@ -1,3 +1,14 @@
 # Google App Engine generated folder
 appengine-generated/
 baskobot-b8cae21c879b.json
+
+# Python generated classes
+*.pyc
+
+# Some other files
+.Python
+bin/
+diet_bot.egg-info/
+include/
+lib/
+pip-selfcheck.json

@@ -2,13 +2,13 @@ sudo: false
 language: python
 before_install:
 - openssl aes-256-cbc -K $encrypted_9d61a4057135_key -iv $encrypted_9d61a4057135_iv -in baskobot-b8cae21c879b.json.enc -out baskobot-b8cae21c879b.json -d
-install: 
-- echo "No install to run"
+install:
+- pip install -e .
 script: 
-- echo "No script to run"
+- pytest
 deploy:
   provider: gae
   keyfile: baskobot-b8cae21c879b.json
   project: baskobot
   on: 
-    branch: feature-split-to-modules
+    branch: master
