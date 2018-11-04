@@ -105,14 +105,6 @@ class WebhookHandler(webapp2.RequestHandler):
             elif text == '/stop':
                 reply('Bot disabled')
                 botenabler.setEnabled(chat_id, False)
-            elif text == '/image':
-                img = Image.new('RGB', (512, 512))
-                base = random.randint(0, 16777216)
-                pixels = [base+i*j for i in range(512) for j in range(512)]  # generate sample image
-                img.putdata(pixels)
-                output = StringIO.StringIO()
-                img.save(output, 'JPEG')
-                reply(img=output.getvalue())
             elif text.startswith('/addfood'):
                 # exempale: /addfood walnut 30
                 str_to_reply = 'Didn\'t fully understand. Should be like: /addfood walnut 30'
