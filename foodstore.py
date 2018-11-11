@@ -9,8 +9,18 @@ import myutils
 class FoodsListStore(ndb.Model):
     listOfNames = ndb.StringProperty()
 
+def registerFoodStoreCommands(commander):
+    commander.register_command('/showfoods', showListOfFoods)
+
+def getListOfFoods():
+    return ndb.Key('FoodsListStore', 'FoodsList').get()
+
+def storeListOfFoods(foodsToStore):
+    foodsList = FoodsListStore(key=ndb.Key('FoodsListStore', 'FoodsList'),listOfNames=foodsToStore)
+    foodsList.put()
+
 def showListOfFoods():
-    queryFoodList = ndb.Key('FoodsListStore', 'FoodsList').get()
+    queryFoodList = getListOfFoods()
     foodList = 'No foods !'
     if queryFoodList is not None:
         foodList = queryFoodList.listOfNames
@@ -23,7 +33,7 @@ def addFood(foodName, calories):
     result_msg = ''
 
     # Get list of food names.
-    queryFoodList = ndb.Key('FoodsListStore', 'FoodsList').get()
+    queryFoodList = getListOfFoods()
     foodsListArray = []
     if queryFoodList is not None:
         foodsListArray = queryFoodList.listOfNames.split(',')
@@ -33,8 +43,7 @@ def addFood(foodName, calories):
     if foodName not in foodsListArray:
         foodsListArray.append(foodName)
         foodsListString = ",".join(foodsListArray)
-        foodsList = FoodsListStore(key=ndb.Key('FoodsListStore', 'FoodsList'),listOfNames=foodsListString)
-        foodsList.put()
+        storeListOfFoods(foodsListString)
         result_msg = 'Food ' + foodName + ' added, calories: ' + str(calories) + '.'
     else:
         result_msg = 'Food ' + foodName + ' already exists...'

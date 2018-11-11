@@ -1,7 +1,7 @@
-import pytest
+import unittest
 from commander import Commander
 
-class TestCommander(object):
+class TestCommander(unittest.TestCase):
     def test_register_and_execute(self):
         commander = Commander()
         def command():
