@@ -5,8 +5,10 @@ before_install:
 install:
 - echo None
 script:
-- pip install nosegae
+- curl https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-225.0.0-linux-x86_64.tar.gz --output gcloud.tar.gz
+- tar -xvzf gcloud.tar.gz
 - gcloud version
+- pip install nosegae
 - nosetests --with-gae
 deploy:
   provider: gae
