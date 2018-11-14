@@ -5,11 +5,9 @@ before_install:
 install:
 - curl https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-225.0.0-linux-x86_64.tar.gz --output gcloud.tar.gz
 - tar -xvzf gcloud.tar.gz
-- ./google-cloud-sdk/install.sh -q --path-update true
 script:
-- gcloud version
 - pip install nosegae
-- nosetests --with-gae
+- nosetests --with-gae --gae-lib-root=./google-cloud-sdk/platform/google_appengine
 deploy:
   provider: gae
   keyfile: baskobot-b8cae21c879b.json
