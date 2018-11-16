@@ -106,7 +106,7 @@ class WebhookHandler(webapp2.RequestHandler):
         logging.info('Cmd: {}, Params: {}'.format(cmd, params))
 
         if commander.has_command(cmd):
-            reply(commander.execute(cmd))
+            reply(commander.execute(cmd, params))
 
         elif text.startswith('/'):
             if text == '/start':
