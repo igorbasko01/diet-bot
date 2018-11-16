@@ -11,6 +11,7 @@ class FoodsListStore(ndb.Model):
 
 def registerFoodStoreCommands(commander):
     commander.register_command('/showfoods', showListOfFoods)
+    commander.register_command('/addfood', addFood)
 
 def getListOfFoods():
     return ndb.Key('FoodsListStore', 'FoodsList').get()
@@ -26,7 +27,12 @@ def showListOfFoods():
         foodList = queryFoodList.listOfNames
     return foodList
 
-def addFood(foodName, calories):
+def addFood(params):
+    if len(params) != 2:
+        return 'Didn\'t fully understand. Should be like: /addfood walnut 30'
+
+    foodName = params[0]
+    calories = params[1]
     if not myutils.is_number(calories) or int(calories) < 1:
         return 'Invalid calories ! should be a number greater than 0.'
 

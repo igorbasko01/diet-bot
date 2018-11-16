@@ -114,13 +114,6 @@ class WebhookHandler(webapp2.RequestHandler):
             elif text == '/stop':
                 reply('Bot disabled')
                 botenabler.setEnabled(chat_id, False)
-            elif text.startswith('/addfood'):
-                # exempale: /addfood walnut 30
-                str_to_reply = 'Didn\'t fully understand. Should be like: /addfood walnut 30'
-                splitText = text.split()
-                if len(splitText) == 3:
-                    str_to_reply = foodstore.addFood(splitText[1], splitText[2])
-                reply(str_to_reply)
             else:
                 reply('What command?')
 

@@ -11,6 +11,15 @@ class TestCommander(unittest.TestCase):
         assert result == True
 
 
+    def test_execute_params(self):
+        commander = Commander()
+        def command(text):
+            return text
+        commander.register_command('com', command)
+        result = commander.execute('com', 'shalom')
+        assert result == 'shalom'
+
+
     def test_has_command(self):
         cmndr = Commander()
         def command():
