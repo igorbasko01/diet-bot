@@ -8,6 +8,9 @@ class Commander:
         #TODO: Don't allow to register existing key.
         self.commands[cmd] = func
 
+    def has_command(self, cmd):
+        return True if cmd in self.commands else False
+
     def execute(self, cmd):
         logging.info('Going to execute the following command: ' + cmd)
         try:
