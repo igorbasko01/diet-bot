@@ -102,7 +102,12 @@ class WebhookHandler(webapp2.RequestHandler):
             logging.info('send response:')
             logging.info(resp)
 
-        if text.startswith('/'):
+        cmd, params = myutils.split_text(text)
+
+        if commander.has_command(cmd):
+            reply(commander.execute(cmd))
+
+        elif text.startswith('/'):
             if text == '/start':
                 reply('Bot enabled')
                 botenabler.setEnabled(chat_id, True)
@@ -116,8 +121,6 @@ class WebhookHandler(webapp2.RequestHandler):
                 if len(splitText) == 3:
                     str_to_reply = foodstore.addFood(splitText[1], splitText[2])
                 reply(str_to_reply)
-            elif text.startswith('/showfoods'):
-                reply(foodstore.showListOfFoods())
             else:
                 reply('What command?')
 

@@ -8,7 +8,7 @@ install:
 - pwd
 script:
 - pip install nosegae
-- nosetests --with-gae --gae-lib-root ./google_appengine
+- nosetests -d --with-gae --gae-lib-root ./google_appengine
 deploy:
   provider: gae
   keyfile: baskobot-b8cae21c879b.json
