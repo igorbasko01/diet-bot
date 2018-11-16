@@ -60,3 +60,10 @@ class TestFoodstore(unittest.TestCase):
         foodstore.registerFoodStoreCommands(cmndr)
         result = cmndr.execute('/addfood', ['h','twenty'])
         assert result == 'Invalid calories ! should be a number greater than 0.'
+
+
+    def test_add_food_emoji(self):
+        cmndr = Commander()
+        foodstore.registerFoodStoreCommands(cmndr)
+        result = cmndr.execute('/addfood', ['\U0001f33d','100'])
+        assert result == 'Food \\U0001f33d added, calories: 100.'

@@ -29,6 +29,7 @@ def showListOfFoods():
 
 def addFood(params):
     if len(params) != 2:
+        logging.info('Params: {}'.format(params))
         return 'Didn\'t fully understand. Should be like: /addfood walnut 30'
 
     foodName = params[0]
