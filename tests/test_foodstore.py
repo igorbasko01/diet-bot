@@ -1,5 +1,6 @@
 import foodstore
 import unittest
+from commander import Commander
 
 class TestFoodstore(unittest.TestCase):
     nosegae_datastore_v3 = True
@@ -9,3 +10,10 @@ class TestFoodstore(unittest.TestCase):
         listOfFoods = foodstore.showListOfFoods()
         print listOfFoods
         assert listOfFoods == "apple,hummus"
+
+    def test_register_command(self):
+        cmndr = Commander()
+        foodstore.registerFoodStoreCommands(cmndr)
+        foodstore.storeListOfFoods("fries")
+        listOfFoods = cmndr.execute("/showfoods")
+        assert listOfFoods == "fries"
