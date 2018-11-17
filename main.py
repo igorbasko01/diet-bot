@@ -120,10 +120,6 @@ class WebhookHandler(webapp2.RequestHandler):
 
         # CUSTOMIZE FROM HERE
 
-        elif 'who are you' in text:
-            reply('telebot starter kit, created by yukuku: https://github.com/yukuku/telebot')
-        elif 'what time' in text:
-            reply('look at the corner of your screen!')
         elif u'\u2615\ufe0f' in text:
             logging.info('Inside the coffee...')
             str_to_reply = coffeestore.handleCoffee(name, date)
