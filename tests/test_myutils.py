@@ -14,11 +14,3 @@ class TestMyutils(unittest.TestCase):
         cmd, params = myutils.split_text(text)
         assert cmd == u'/addfood'
         assert params == [u'\U0001f33d',u'100']
-
-
-    def test_logging_info_uni(self):
-        myutils.logging_info('Cmd: {}, Params: {}', u'hello', u'\U0001f33d')
-
-
-    def test_logging_info_simple(self):
-        myutils.logging_info('Hello')
