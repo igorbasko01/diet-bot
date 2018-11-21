@@ -29,6 +29,7 @@ BASE_URL = 'https://api.telegram.org/bot' + TOKEN + '/'
 
 commander = Commander()
 foodstore.registerFoodStoreCommands(commander)
+coffeestore.registerCoffeeCommands(commander)
 
 # ================================
 
@@ -124,14 +125,6 @@ class WebhookHandler(webapp2.RequestHandler):
         elif u'\u2615\ufe0f' in text:
             logging.info('Inside the coffee...')
             str_to_reply = coffeestore.handleCoffee(name, date)
-            reply(str_to_reply)
-        elif 'baskobot update coffee' in text:
-            logging.info('Inside the update coffee...')
-            str_to_reply = '' + name + ', didn\'t quite get the amount...'
-            splitText = text.split()
-            if len(splitText) > 3 and myutils.is_number(splitText[3]):
-                coffeestore.updateCoffee(name, date, int(splitText[3]))
-                str_to_reply = '' + name + ', the coffee amount was updated.'
             reply(str_to_reply)
         else:
             if botenabler.getEnabled(chat_id):

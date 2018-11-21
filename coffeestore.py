@@ -7,14 +7,21 @@ class CoffeeStore(ndb.Model):
     timesDrank = ndb.IntegerProperty()
 
 
-def registerCoffeCommands(commander):
-    commander.register_command('/coffeeupd', new_update_coffee)
+def registerCoffeeCommands(commander):
+    commander.register_command('/coffeeupd', update_coffee)
+
+def getCoffeeKey(name, date):
+    date_got = datetime.datetime.fromtimestamp(int(date)).strftime("%Y-%m-%d")
+    key = '{}:coffee:{}'.format(name, date_got)
+    return key
+
+def getCoffeeAmount(key):
+    return ndb.Key('CoffeeStore', key).get()
 
 def handleCoffee(name, date):
     smilies = [u'\ud83d\ude43',u'\ud83d\ude0f',u'\ud83d\ude31',u'\ud83d\ude21']
-    date_got = datetime.datetime.fromtimestamp(int(date)).strftime("%Y-%m-%d")
-    key = '' + name + ':coffee:' + date_got
-    queryCoffee = ndb.Key('CoffeeStore', key).get()
+    key = getCoffeeKey(name, date)
+    queryCoffee = getCoffeeAmount(key)
 
     logging.info('key: ' + key)
     logging.info('queryCoffee.timesDrank: ' + str(queryCoffee))
@@ -40,15 +47,19 @@ def handleCoffee(name, date):
     return str_to_reply
 
 
-# Deprecated
-# Need to delete when the new_update_coffee will be ready.
-def updateCoffee(name, date, amount):
-    date_got = datetime.datetime.fromtimestamp(int(date)).strftime("%Y-%m-%d")
-    key = '' + name + ':coffee:' + date_got
+def update_coffee(params):
+    logging.info('Inside updateCoffee...')
+    if len(params) != 3:
+        logging.info('Params: {}'.format(params))
+        return 'Didn\'t fully understand. Should be like: /coffeeupd 2'
 
+    name = params[0]
+    date = params[1]
+    amount = params[2]
+
+    key = getCoffeeKey(name, date)
     coffeeDrank = CoffeeStore(key=ndb.Key('CoffeeStore', key),timesDrank=amount)
     coffeeDrank.put()
 
-def new_update_coffee(params):
-    logging.info('Inside updateCoffee...')
+    return '{}, the coffee amount was updated.'.format(name)
     
