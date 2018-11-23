@@ -58,6 +58,7 @@ class WebhookHandler(webapp2.RequestHandler):
         str_to_reply = ''
         urlfetch.set_default_fetch_deadline(60)
         body = json.loads(self.request.body)
+        request_body = body
         logging.info('request body:')
         logging.info(body)
         self.response.write(json.dumps(body))
@@ -108,7 +109,7 @@ class WebhookHandler(webapp2.RequestHandler):
         logging.info('Cmd: {}, Params: {}',cmd, params_encoded)
 
         if commander.has_command(cmd):
-            reply(commander.execute(cmd, params))
+            reply(commander.execute(cmd, request_body, params))
 
         elif text.startswith('/'):
             if text == '/start':

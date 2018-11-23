@@ -25,7 +25,7 @@ class TestCoffeestore(unittest.TestCase):
     def test_update_coffee(self):
         cmndr = Commander()
         coffeestore.registerCoffeeCommands(cmndr)
-        cmndr.execute('/coffeeupd', ['igor', '1542830400', 10])
+        cmndr.execute('/coffeeupd', {'message': {'date': 1542830400, 'from': {'first_name': 'igor'}}}, [10])
         key = coffeestore.getCoffeeKey('igor', '1542830400')
         coffee_amount = coffeestore.getCoffeeAmount(key)
         assert coffee_amount.timesDrank == 10

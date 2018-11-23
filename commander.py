@@ -11,12 +11,12 @@ class Commander:
     def has_command(self, cmd):
         return True if cmd in self.commands else False
 
-    def execute(self, cmd, params=''):
+    def execute(self, cmd, request_body, params=''):
         logging.info('Going to execute the following command: ' + cmd)
         try:
-            return self.commands[cmd](params)
+            return self.commands[cmd](request_body, params)
         except KeyError, e:
             logging.info('Couldn\'t find the following registered command: ' % str(cmd))
         except TypeError, e:
-            return self.commands[cmd]()
+            return self.commands[cmd](request_body)
         

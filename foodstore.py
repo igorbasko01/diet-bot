@@ -20,14 +20,14 @@ def storeListOfFoods(foodsToStore):
     foodsList = FoodsListStore(key=ndb.Key('FoodsListStore', 'FoodsList'),listOfNames=foodsToStore)
     foodsList.put()
 
-def showListOfFoods():
+def showListOfFoods(request_body):
     queryFoodList = getListOfFoods()
     foodList = 'No foods !'
     if queryFoodList is not None:
         foodList = queryFoodList.listOfNames
     return foodList
 
-def addFood(params):
+def addFood(request_body, params):
     if len(params) != 2:
         logging.info('Params: {}'.format(params))
         return 'Didn\'t fully understand. Should be like: /addfood walnut 30'

@@ -2,6 +2,7 @@ from google.appengine.ext import ndb
 
 import logging
 import datetime
+import myutils
 
 class CoffeeStore(ndb.Model):
     timesDrank = ndb.IntegerProperty()
@@ -47,15 +48,15 @@ def handleCoffee(name, date):
     return str_to_reply
 
 
-def update_coffee(params):
+def update_coffee(request_body, params):
     logging.info('Inside updateCoffee...')
-    if len(params) != 3:
+    if len(params) != 1:
         logging.info('Params: {}'.format(params))
         return 'Didn\'t fully understand. Should be like: /coffeeupd 2'
 
-    name = params[0]
-    date = params[1]
-    amount = params[2]
+    name = myutils.extract_user_first_name(request_body)
+    date = myutils.extract_date(request_body)
+    amount = params[0]
 
     key = getCoffeeKey(name, date)
     coffeeDrank = CoffeeStore(key=ndb.Key('CoffeeStore', key),timesDrank=amount)
