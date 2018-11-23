@@ -50,13 +50,13 @@ def handleCoffee(name, date):
 
 def update_coffee(request_body, params):
     logging.info('Inside updateCoffee...')
-    if len(params) != 1:
+    if len(params) != 1 or not myutils.is_number(params[0]):
         logging.info('Params: {}'.format(params))
         return 'Didn\'t fully understand. Should be like: /coffeeupd 2'
 
     name = myutils.extract_user_first_name(request_body)
     date = myutils.extract_date(request_body)
-    amount = params[0]
+    amount = int(params[0])
 
     key = getCoffeeKey(name, date)
     coffeeDrank = CoffeeStore(key=ndb.Key('CoffeeStore', key),timesDrank=amount)
