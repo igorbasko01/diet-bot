@@ -18,8 +18,20 @@ class TestCoffeestore(unittest.TestCase):
         assert coffeeResult.timesDrank == 3
 
     def test_handle_coffee(self):
-        coffeeDrank = coffeestore.handleCoffee('igor', '1542830400')
+        request_body = {'message': {'date': 1542830400, 'from': {'first_name': 'igor'}}}
+        coffeeDrank = coffeestore.handle_coffee(request_body, u'\u2615\ufe0f')
         assert u'igor drank 1 coffee out of 3.' in coffeeDrank
+
+    def test_handle_coffee_multiple_in_msg(self):
+        request_body = {'message': {'date': 1542830400, 'from': {'first_name': 'igor'}}}
+        coffeeDrank = coffeestore.handle_coffee(request_body, u'\u2615\ufe0f igor ba \u2615\ufe0f')
+        assert u'igor drank 2 coffee out of 3.' in coffeeDrank
+
+    def test_handle_coffee_multiple_msgs(self):
+        request_body = {'message': {'date': 1542830400, 'from': {'first_name': 'igor'}}}
+        coffeeDrank = coffeestore.handle_coffee(request_body, u'igor ba \u2615\ufe0f')
+        coffeeDrank = coffeestore.handle_coffee(request_body, u' \u2615\ufe0f ba')
+        assert u'igor drank 2 coffee out of 3.' in coffeeDrank
 
 
     def test_update_coffee(self):

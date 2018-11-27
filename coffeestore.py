@@ -10,6 +10,7 @@ class CoffeeStore(ndb.Model):
 
 def registerCoffeeCommands(commander):
     commander.register_command('/coffeeupd', update_coffee)
+    commander.register_command(commander.KEY_OTHER, handle_coffee)
 
 def getCoffeeKey(name, date):
     date_got = datetime.datetime.fromtimestamp(int(date)).strftime("%Y-%m-%d")
@@ -18,6 +19,42 @@ def getCoffeeKey(name, date):
 
 def getCoffeeAmount(key):
     return ndb.Key('CoffeeStore', key).get()
+
+
+def handle_coffee(request_body, text):
+    coffees = text.count(u'\u2615\ufe0f')
+    if coffees == 0:
+        return ''
+
+    name = myutils.extract_user_first_name(request_body)
+    date = myutils.extract_date(request_body)
+
+    smilies = [u'\ud83d\ude43',u'\ud83d\ude0f',u'\ud83d\ude31',u'\ud83d\ude21']
+    key = getCoffeeKey(name, date)
+    queryCoffee = getCoffeeAmount(key)
+
+    logging.info('key: ' + key)
+    logging.info('queryCoffee.timesDrank: ' + str(queryCoffee))
+    logging.info('Coffees to add: {}'.format(coffees))
+
+    amount_drank = coffees
+    if queryCoffee is not None:
+        amount_drank += queryCoffee.timesDrank
+
+    coffeeDrank = CoffeeStore(key=ndb.Key('CoffeeStore', key),timesDrank=amount_drank)
+    coffeeDrank.put()
+
+    if amount_drank == 3:
+        str_to_reply = name + ' drank ' + str(amount_drank) + ' coffee out of ' + str(3) + '\nIt\'s your last one !'
+    elif amount_drank > 3:
+        str_to_reply = name + ' drank ' + str(amount_drank) + ' coffee out of ' + str(3) + '\nPlease don\'t drink anymore...'
+    else:
+        str_to_reply = name + ' drank ' + str(amount_drank) + ' coffee out of ' + str(3) + '.'
+
+    str_to_reply += ' ' + smilies[min(amount_drank-1,len(smilies)-1)]
+    logging.info('reply: ' + str_to_reply)
+    return str_to_reply
+
 
 def handleCoffee(name, date):
     smilies = [u'\ud83d\ude43',u'\ud83d\ude0f',u'\ud83d\ude31',u'\ud83d\ude21']
