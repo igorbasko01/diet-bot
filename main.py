@@ -112,9 +112,11 @@ class WebhookHandler(webapp2.RequestHandler):
             reply(commander.execute(cmd, request_body, params))
         else:
             replies = commander.execute_other(request_body, [cmd] + params)
-            for single_rep in replies:
-                if single_rep is not '':
-                    reply(single_rep)
+            real_replies = [ x for x in replies if x is not '' ]
+            for single_rep in real_replie:
+                reply(single_rep)
+            if len(real_replies) == 0:
+                reply('I got your message! (but I do not know how to answer)')
 
         if text.startswith('/'):
             if text == '/start':
@@ -127,13 +129,6 @@ class WebhookHandler(webapp2.RequestHandler):
                 reply('What command?')
 
         # CUSTOMIZE FROM HERE
-
-        else:
-            if botenabler.getEnabled(chat_id):
-                reply('I got your message! (but I do not know how to answer)')
-                logging.info(text)
-            else:
-                logging.info('not enabled for chat_id {}'.format(chat_id))
 
 
 app = webapp2.WSGIApplication([
