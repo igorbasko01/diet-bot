@@ -113,7 +113,7 @@ class WebhookHandler(webapp2.RequestHandler):
         else:
             replies = commander.execute_other(request_body, [cmd] + params)
             real_replies = [ x for x in replies if x is not '' ]
-            for single_rep in real_replie:
+            for single_rep in real_replies:
                 reply(single_rep)
             if len(real_replies) == 0:
                 reply('I got your message! (but I do not know how to answer)')
@@ -125,8 +125,7 @@ class WebhookHandler(webapp2.RequestHandler):
             elif text == '/stop':
                 reply('Bot disabled')
                 botenabler.setEnabled(chat_id, False)
-            else:
-                reply('What command?')
+
 
         # CUSTOMIZE FROM HERE
 
