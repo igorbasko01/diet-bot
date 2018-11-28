@@ -113,7 +113,8 @@ class WebhookHandler(webapp2.RequestHandler):
         else:
             replies = commander.execute_other(request_body, [cmd] + params)
             for single_rep in replies:
-                reply(single_rep) if single_rep is not ''
+                if single_rep is not '':
+                    reply(single_rep)
 
         if text.startswith('/'):
             if text == '/start':
