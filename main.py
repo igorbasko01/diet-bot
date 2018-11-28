@@ -110,8 +110,12 @@ class WebhookHandler(webapp2.RequestHandler):
 
         if commander.has_command(cmd):
             reply(commander.execute(cmd, request_body, params))
+        else:
+            replies = commander.execute_other(request_body, [cmd] + params)
+            for single_rep in replies:
+                reply(single_rep) if single_rep is not ''
 
-        elif text.startswith('/'):
+        if text.startswith('/'):
             if text == '/start':
                 reply('Bot enabled')
                 botenabler.setEnabled(chat_id, True)
@@ -123,10 +127,6 @@ class WebhookHandler(webapp2.RequestHandler):
 
         # CUSTOMIZE FROM HERE
 
-        elif u'\u2615\ufe0f' in text:
-            logging.info('Inside the coffee...')
-            str_to_reply = coffeestore.handleCoffee(name, date)
-            reply(str_to_reply)
         else:
             if botenabler.getEnabled(chat_id):
                 reply('I got your message! (but I do not know how to answer)')

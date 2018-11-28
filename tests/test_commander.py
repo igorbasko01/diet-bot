@@ -29,4 +29,25 @@ class TestCommander(unittest.TestCase):
         result_false = cmndr.has_command('com_false')
         assert result_true == True
         assert result_false == False
+
+    def test_register_other_command(self):
+        cmndr = Commander()
+        def other_command_t():
+            return True
+        def other_command_f():
+            return False
+        cmndr.register_command(cmndr.KEY_OTHER, other_command_t)
+        cmndr.register_command(cmndr.KEY_OTHER, other_command_f)
+        assert cmndr.commands[cmndr.KEY_OTHER] == [other_command_t, other_command_f]
+
+    def test_execute_other(self):
+        cmndr = Commander()
+        def other_command2(r, t):
+            return 'command 2'
+        def other_command1(r):
+            return 'command 1'
+        cmndr.register_command(cmndr.KEY_OTHER, other_command1)
+        cmndr.register_command(cmndr.KEY_OTHER, other_command2)
+        result = cmndr.execute_other('request_body', 'msg text')
+        assert result == ['command 1', 'command 2']
             
