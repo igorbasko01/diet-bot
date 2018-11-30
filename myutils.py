@@ -30,7 +30,7 @@ def extract_user_first_name(request_body):
 
 def handle_message(commander, cmd, request_body, params):
     if commander.has_command(cmd):
-        reply(commander.execute(cmd, request_body, params))
+        return [commander.execute(cmd, request_body, params)]
     else:
         text = ' '.join(params)
         replies = commander.execute_other(request_body, cmd + text)

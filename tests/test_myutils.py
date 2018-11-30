@@ -19,10 +19,17 @@ class TestMyutils(unittest.TestCase):
         assert cmd == u'/addfood'
         assert params == [u'\U0001f33d',u'100']
 
-    def test_handle_message(self):
+    def test_handle_message_other(self):
         cmndr = Commander()
         coffeestore.registerCoffeeCommands(cmndr)
         cmd, params = myutils.split_text(u'\u2615\ufe0f \u2615\ufe0f')
         replies = myutils.handle_message(cmndr, cmd, {'message': {'date': 1542830400, 'from': {'first_name': 'igor'}}}, params)
-        assert 'igor drank 2 coffee out of 3' in replies[0] 
+        assert 'igor drank 2 coffee out of 3' in replies[0]
+
+    def test_handle_message_specific(self):
+        cmndr = Commander()
+        coffeestore.registerCoffeeCommands(cmndr)
+        cmd, params = myutils.split_text(u'/coffeeupd 2')
+        replies = myutils.handle_message(cmndr, cmd, {'message': {'date': 1542830400, 'from': {'first_name': 'igor'}}}, params)
+        assert replies[0] == 'igor, the coffee amount was updated.'
         
