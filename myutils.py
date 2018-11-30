@@ -1,3 +1,5 @@
+import logging
+
 def is_number(s):
     try:
         int(s)
@@ -24,3 +26,16 @@ def extract_date(request_body):
 def extract_user_first_name(request_body):
     message = extract_message(request_body)
     return message.get('from').get('first_name')
+
+
+def handle_message(commander, cmd, request_body, params):
+    if commander.has_command(cmd):
+        reply(commander.execute(cmd, request_body, params))
+    else:
+        replies = commander.execute_other(request_body, [cmd] + params)
+        logging.info('Replies: {}'.format(replies))
+        real_replies = [ x for x in replies if x is not '' ]
+        if len(real_replies) == 0:
+            return ['I got your message! (but I do not know how to answer)']
+        else:
+            return real_replies

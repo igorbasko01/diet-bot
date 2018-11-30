@@ -108,15 +108,10 @@ class WebhookHandler(webapp2.RequestHandler):
         params_encoded = [ x.encode('utf-8') for x in params]
         logging.info('Cmd: {}, Params: {}',cmd, params_encoded)
 
-        if commander.has_command(cmd):
-            reply(commander.execute(cmd, request_body, params))
-        else:
-            replies = commander.execute_other(request_body, [cmd] + params)
-            real_replies = [ x for x in replies if x is not '' ]
-            for single_rep in real_replies:
-                reply(single_rep)
-            if len(real_replies) == 0:
-                reply('I got your message! (but I do not know how to answer)')
+        replies = myutils.handle_message(commander, cmd, request_body, params)
+
+        for r in replies:
+            reply(r)
 
         if text.startswith('/'):
             if text == '/start':
