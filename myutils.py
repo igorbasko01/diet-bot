@@ -32,7 +32,8 @@ def handle_message(commander, cmd, request_body, params):
     if commander.has_command(cmd):
         reply(commander.execute(cmd, request_body, params))
     else:
-        replies = commander.execute_other(request_body, [cmd] + params)
+        text = ' '.join(params)
+        replies = commander.execute_other(request_body, cmd + text)
         logging.info('Replies: {}'.format(replies))
         real_replies = [ x for x in replies if x is not '' ]
         if len(real_replies) == 0:

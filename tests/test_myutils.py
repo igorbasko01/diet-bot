@@ -22,7 +22,7 @@ class TestMyutils(unittest.TestCase):
     def test_handle_message(self):
         cmndr = Commander()
         coffeestore.registerCoffeeCommands(cmndr)
-        cmd, params = myutils.split_text(u'\u2615\ufe0f')
+        cmd, params = myutils.split_text(u'\u2615\ufe0f \u2615\ufe0f')
         replies = myutils.handle_message(cmndr, cmd, {'message': {'date': 1542830400, 'from': {'first_name': 'igor'}}}, params)
-        assert 'igor drank 1 coffee out of 3' in replies[0] 
+        assert 'igor drank 2 coffee out of 3' in replies[0] 
         
