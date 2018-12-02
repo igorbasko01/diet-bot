@@ -22,4 +22,13 @@ def set_max_calories(request_body, params):
     user_obj.put()
 
     return '{}, max calories were updated.'.format(name)
+
+def get_max_calories(request_body):
+    uid = myutils.extract_user_id(request_body)
+    name = myutils.extract_user_first_name(request_body)
+    user_obj = ndb.Key('UserStore', uid).get()
+    if user_obj is None:
+        return '{}, sorry but you didn\'t set max calories.'.format(name)
+    else:
+        return '{}, your max calories is {}'.format(name, user_obj.max_calories)
     
