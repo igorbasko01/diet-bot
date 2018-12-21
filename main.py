@@ -21,6 +21,7 @@ import foodstore
 import myutils
 import botenabler
 import coffeestore
+import userstore
 from commander import Commander
 
 TOKEN = bottoken.get_token()
@@ -30,6 +31,7 @@ BASE_URL = 'https://api.telegram.org/bot' + TOKEN + '/'
 commander = Commander()
 foodstore.registerFoodStoreCommands(commander)
 coffeestore.registerCoffeeCommands(commander)
+userstore.register_user_commands(commander)
 
 # ================================
 

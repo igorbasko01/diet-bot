@@ -7,6 +7,10 @@ import logging
 class UserStore(ndb.Model):
     max_calories = ndb.IntegerProperty()
 
+def register_user_commands(commander):
+    commander.register_command('/set_max_calories', set_max_calories)
+    commander.register_command('/show_max_calories', get_max_calories)
+
 
 def set_max_calories(request_body, params):
     if len(params) != 1 or not myutils.is_number(params[0]):
