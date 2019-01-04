@@ -9,9 +9,13 @@ import myutils
 class FoodsListStore(ndb.Model):
     listOfNames = ndb.StringProperty()
 
+class FoodCalorieValues(ndb.Model):
+    calories = ndb.IntegerProperty()
+
 def registerFoodStoreCommands(commander):
     commander.register_command('/showfoods', showListOfFoods)
     commander.register_command('/addfood', addFood)
+    commander.register_command('/add_food_default', add_food_default)
 
 def getListOfFoods():
     return ndb.Key('FoodsListStore', 'FoodsList').get()
@@ -26,6 +30,22 @@ def showListOfFoods(request_body):
     if queryFoodList is not None:
         foodList = queryFoodList.listOfNames
     return foodList
+
+def add_food_default(request_body, params):
+    if len(params) != 2:
+        logging.info('Params: {}'.format(params))
+        return 'Didn\'t fully understand. Should be like: /add_food_default \ud83c\udf6a 100'
+
+    food_name = params[0]
+    calories = params[1]
+    if not myutils.is_number(calories) or int(calories) < 1:
+        return 'Invalid calories ! Should be a number greater than 0.'
+
+    food = FoodCalorieValues(key=ndb.Key('FoodCalorieValues',food_name), calories=int(calories))
+    food.put()
+
+    return 'Got it ! {}={}'.format(food_name, calories)
+    
 
 def addFood(request_body, params):
     if len(params) != 2:

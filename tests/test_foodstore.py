@@ -67,3 +67,9 @@ class TestFoodstore(unittest.TestCase):
         foodstore.registerFoodStoreCommands(cmndr)
         result = cmndr.execute('/addfood', {}, ['\U0001f33d','100'])
         assert result == 'Food \\U0001f33d added, calories: 100.'
+
+    def test_add_default_food(self):
+        cmndr = Commander()
+        foodstore.registerFoodStoreCommands(cmndr)
+        result = cmndr.execute('/add_food_default', {}, ['\ud83c\udf6a','100'])
+        assert result == 'Got it ! \ud83c\udf6a=100'
