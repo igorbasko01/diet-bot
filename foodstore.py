@@ -44,7 +44,7 @@ def add_food_default(request_body, params):
     food = FoodCalorieValues(key=ndb.Key('FoodCalorieValues',food_name), calories=int(calories))
     food.put()
 
-    return 'Got it ! {}={}'.format(food_name, calories)
+    return 'Got it ! '+food_name+'={}'.format(calories)
     
 
 def addFood(request_body, params):

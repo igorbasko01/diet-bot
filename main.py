@@ -108,7 +108,6 @@ class WebhookHandler(webapp2.RequestHandler):
 
         cmd, params = myutils.split_text(text)
         params_encoded = [ x.encode('utf-8') for x in params]
-        logging.info('Cmd: {}, Params: {}',cmd, params_encoded)
 
         replies = myutils.handle_message(commander, cmd, request_body, params)
 
