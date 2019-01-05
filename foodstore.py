@@ -42,7 +42,7 @@ def add_food(request_body, params, is_user=False):
     cmd_name = '/add_food_default' if not is_user else '/add_food'
     if len(params) != 2:
         logging.info('Params: {}'.format(params))
-        return 'Didn\'t fully understand. Should be like: {} \ud83c\udf6a 100'.format(cmd_name)
+        return u'Didn\'t fully understand. Should be like: {} \ud83c\udf6a 100'.format(cmd_name)
 
     food_name = params[0]
     calories = params[1]

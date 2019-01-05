@@ -25,11 +25,13 @@ class Commander:
 
     def execute(self, cmd, request_body, params=''):
         logging.info('Going to execute the following command: ' + cmd)
+        logging.info(params)
         try:
             return self.commands[cmd](request_body, params)
         except KeyError, e:
             logging.info('Couldn\'t find the following registered command: ' % str(cmd))
         except TypeError, e:
+            print(e)
             return self.commands[cmd](request_body)
 
     def execute_other(self, request_body, text):
