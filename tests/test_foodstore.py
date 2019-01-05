@@ -2,6 +2,7 @@ import foodstore
 import unittest
 from commander import Commander
 from google.appengine.ext import ndb
+import myutils
 
 class TestFoodstore(unittest.TestCase):
     nosegae_datastore_v3 = True
@@ -79,6 +80,6 @@ class TestFoodstore(unittest.TestCase):
         cmndr = Commander()
         foodstore.registerFoodStoreCommands(cmndr)
         request_body = {'message': {'from': {'id': '123'}}}
-        result = cmndr.execute('/add_food', request_body, ['\ud83c\udf6a','100'])
-        assert result == 'Got it ! \ud83c\udf6a=100'
-        assert ndb.Key('FoodCalorieValues', '\ud83c\udf6a:123').get().calories == 100
+        result = myutils.handle_message(cmndr, u'/add_food', request_body, [u'\ud83c\udf6a',u'100'])
+        assert result == [u'Got it ! \ud83c\udf6a=100']
+        assert ndb.Key('FoodCalorieValues', u'\ud83c\udf6a:123').get().calories == 100

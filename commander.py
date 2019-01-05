@@ -23,8 +23,9 @@ class Commander:
     def has_command(self, cmd):
         return True if cmd in self.commands else False
 
-    def execute(self, cmd, request_body, params=''):
+    def execute(self, cmd, request_body, params=[]):
         logging.info('Going to execute the following command: ' + cmd)
+        logging.info(request_body)
         logging.info(params)
         try:
             return self.commands[cmd](request_body, params)

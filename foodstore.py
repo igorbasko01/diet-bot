@@ -39,6 +39,7 @@ def add_food_user(request_body, params):
     return add_food(request_body, params, is_user=True)
     
 def add_food(request_body, params, is_user=False):
+    logging.info(params)
     cmd_name = '/add_food_default' if not is_user else '/add_food'
     if len(params) != 2:
         logging.info('Params: {}'.format(params))
