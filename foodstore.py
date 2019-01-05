@@ -39,7 +39,6 @@ def add_food_user(request_body, params):
     return add_food(request_body, params, is_user=True)
     
 def add_food(request_body, params, is_user=False):
-    logging.info(params)
     cmd_name = '/add_food_default' if not is_user else '/add_food'
     if len(params) != 2:
         logging.info('Params: {}'.format(params))
@@ -50,7 +49,7 @@ def add_food(request_body, params, is_user=False):
     if not myutils.is_number(calories) or int(calories) < 1:
         return 'Invalid calories ! Should be a number greater than 0.'
 
-    key = food_name + ':' + myutils.extract_user_id(request_body) if is_user else food_name
+    key = food_name + ':' + str(myutils.extract_user_id(request_body)) if is_user else food_name
     food = FoodCalorieValues(key=ndb.Key('FoodCalorieValues',key), calories=int(calories))
     food.put()
 

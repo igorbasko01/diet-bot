@@ -79,7 +79,7 @@ class TestFoodstore(unittest.TestCase):
     def test_add_food_user(self):
         cmndr = Commander()
         foodstore.registerFoodStoreCommands(cmndr)
-        request_body = {'message': {'from': {'id': '123'}}}
+        request_body = {'message': {'from': {u'id': 123}}}
         result = myutils.handle_message(cmndr, u'/add_food', request_body, [u'\ud83c\udf6a',u'100'])
         assert result == [u'Got it ! \ud83c\udf6a=100']
         assert ndb.Key('FoodCalorieValues', u'\ud83c\udf6a:123').get().calories == 100
