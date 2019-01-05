@@ -16,6 +16,7 @@ def registerFoodStoreCommands(commander):
     commander.register_command('/showfoods', showListOfFoods)
     commander.register_command('/addfood', addFood)
     commander.register_command('/add_food_default', add_food_default)
+    commander.register_command('/add_food', add_food_user)
 
 def getListOfFoods():
     return ndb.Key('FoodsListStore', 'FoodsList').get()
@@ -32,20 +33,28 @@ def showListOfFoods(request_body):
     return foodList
 
 def add_food_default(request_body, params):
+    return add_food(request_body, params, is_user=False)
+
+def add_food_user(request_body, params):
+    return add_food(request_body, params, is_user=True)
+    
+def add_food(request_body, params, is_user=False):
+    cmd_name = '/add_food_default' if not is_user else '/add_food'
     if len(params) != 2:
         logging.info('Params: {}'.format(params))
-        return 'Didn\'t fully understand. Should be like: /add_food_default \ud83c\udf6a 100'
+        return 'Didn\'t fully understand. Should be like: {} \ud83c\udf6a 100'.format(cmd_name)
 
     food_name = params[0]
     calories = params[1]
     if not myutils.is_number(calories) or int(calories) < 1:
         return 'Invalid calories ! Should be a number greater than 0.'
 
-    food = FoodCalorieValues(key=ndb.Key('FoodCalorieValues',food_name), calories=int(calories))
+    key = food_name + ':' + myutils.extract_user_id(request_body) if is_user else food_name
+    food = FoodCalorieValues(key=ndb.Key('FoodCalorieValues',key), calories=int(calories))
     food.put()
 
     return 'Got it ! '+food_name+'={}'.format(calories)
-    
+
 
 def addFood(request_body, params):
     if len(params) != 2:
