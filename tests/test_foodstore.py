@@ -83,3 +83,21 @@ class TestFoodstore(unittest.TestCase):
         result = myutils.handle_message(cmndr, u'/add_food', request_body, [u'\ud83c\udf6a',u'100'])
         assert result == [u'Got it ! \ud83c\udf6a=100']
         assert ndb.Key('FoodCalorieValues', u'\ud83c\udf6a:123').get().calories == 100
+
+    def test_show_food_not_recognized(self):
+        cmndr = Commander()
+        foodstore.registerFoodStoreCommands(cmndr)
+        request_body = {'message': {'from': {u'id': 123}}}
+        result = myutils.handle_message(cmndr, u'/show_food', request_body, [u'\ud83c\udf6a'])
+        assert result == [u'Sorry, I don\'t recognize this food: \ud83c\udf6a']
+
+    def test_show_food(self):
+        cmndr = Commander()
+        foodstore.registerFoodStoreCommands(cmndr)
+        request_body = {'message': {'from': {u'id': 123}}}
+        myutils.handle_message(cmndr, u'/add_food', request_body, [u'\ud83c\udf6a', u'100'])
+        result = myutils.handle_message(cmndr, u'/show_food', request_body, [u'\ud83c\udf6a'])
+        assert result == [u'Custom \ud83c\udf6a = 100']
+        myutils.handle_message(cmndr, u'/add_food_default', request_body, [u'\ud83c\udf6a', u'35'])
+        result = myutils.handle_message(cmndr, u'/show_food', request_body, [u'\ud83c\udf6a'])
+        assert result == [u'Default \ud83c\udf6a = 35\nCustom \ud83c\udf6a = 100']

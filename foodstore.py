@@ -17,6 +17,7 @@ def registerFoodStoreCommands(commander):
     commander.register_command('/addfood', addFood)
     commander.register_command('/add_food_default', add_food_default)
     commander.register_command('/add_food', add_food_user)
+    commander.register_command('/show_food', show_food)
 
 def getListOfFoods():
     return ndb.Key('FoodsListStore', 'FoodsList').get()
@@ -54,6 +55,29 @@ def add_food(request_body, params, is_user=False):
     food.put()
 
     return 'Got it ! '+food_name+'={}'.format(calories)
+
+
+def show_food(request_body, params):
+    if len(params) != 1:
+        logging.info('Params: {}'.format(params))
+        return u'Didn\'t fully understand. Should be like: /show_food \ud83c\udf6a'
+
+    food_name = params[0]
+    user_id = str(myutils.extract_user_id(request_body))
+
+    default_cals = ndb.Key('FoodCalorieValues', food_name).get()
+    user_cals = ndb.Key('FoodCalorieValues', food_name+':'+user_id).get()
+
+    results = []
+    if default_cals is not None:
+        results.append(u'Default {} = {}'.format(food_name, default_cals.calories))
+    if user_cals is not None:
+        results.append(u'Custom {} = {}'.format(food_name, user_cals.calories))
+
+    if len(results) == 0:
+        results.append(u'Sorry, I don\'t recognize this food: {}'.format(food_name))
+
+    return '\n'.join(results)
 
 
 def addFood(request_body, params):
