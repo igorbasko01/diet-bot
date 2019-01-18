@@ -110,4 +110,5 @@ class TestFoodstore(unittest.TestCase):
         myutils.handle_message(cmndr, u'/add_food_default', request_body, [u'\ud83c\udf6b', u'100'])
         myutils.handle_message(cmndr, u'/add_food', request_body, [u'\ud83c\udf6b', u'20'])
         result = myutils.handle_message(cmndr, u'/show_foods', request_body, [])
-        assert result == [u'Default foods: \n\ud83c\udf6a = 100\n\ud83c\udf6b = 100\nCustom foods: \n\ud83c\udf6b = 20']
+        assert result == [u'Default foods: \n\U0001f36a = 100\n\U0001f36b = 100\nCustom foods: \n\U0001f36b = 20']
+        #assert result == [u'Default foods: \n\ud83c\udf6a = 100\n\ud83c\udf6b = 100\nCustom foods: \n\ud83c\udf6b = 20']
