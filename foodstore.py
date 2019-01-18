@@ -10,6 +10,7 @@ class FoodsListStore(ndb.Model):
     listOfNames = ndb.StringProperty()
 
 class FoodCalorieValues(ndb.Model):
+    user_id = ndb.IntegerProperty()     # 0 Is default
     calories = ndb.IntegerProperty()
 
 def registerFoodStoreCommands(commander):
@@ -18,6 +19,7 @@ def registerFoodStoreCommands(commander):
     commander.register_command('/add_food_default', add_food_default)
     commander.register_command('/add_food', add_food_user)
     commander.register_command('/show_food', show_food)
+    commander.register_command('/show_foods', show_foods)
 
 def getListOfFoods():
     return ndb.Key('FoodsListStore', 'FoodsList').get()
@@ -51,7 +53,8 @@ def add_food(request_body, params, is_user=False):
         return 'Invalid calories ! Should be a number greater than 0.'
 
     key = food_name + ':' + str(myutils.extract_user_id(request_body)) if is_user else food_name
-    food = FoodCalorieValues(key=ndb.Key('FoodCalorieValues',key), calories=int(calories))
+    user_id = 0 if not is_user else myutils.extract_user_id(request_body)
+    food = FoodCalorieValues(key=ndb.Key('FoodCalorieValues',key), calories=int(calories), user_id=user_id)
     food.put()
 
     return 'Got it ! '+food_name+'={}'.format(calories)
@@ -79,6 +82,22 @@ def show_food(request_body, params):
 
     return '\n'.join(results)
 
+def show_foods(request_body):
+    default_foods = [
+        (x.key.id(), x.calories) for x in
+        FoodCalorieValues.query(FoodCalorieValues.user_id==0).fetch()
+    ]
+
+    user_id = myutils.extract_user_id(request_body)
+    custom_foods = [
+        (x.key.id().split(':')[0], x.calories) for x in
+        FoodCalorieValues.query(FoodCalorieValues.user_id==user_id).fetch()
+    ]
+    default_foods_pretty = ['{} = {}'.format(x[0], x[1]) for x in default_foods]
+    custom_foods_pretty = ['{} = {}'.format(x[0], x[1]) for x in custom_foods]
+    all_foods = ['Default foods: '] + default_foods_pretty + ['Custom foods: '] + custom_foods_pretty
+    
+    return '\n'.join(all_foods)
 
 def addFood(request_body, params):
     if len(params) != 2:

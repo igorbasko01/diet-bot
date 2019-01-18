@@ -101,3 +101,13 @@ class TestFoodstore(unittest.TestCase):
         myutils.handle_message(cmndr, u'/add_food_default', request_body, [u'\ud83c\udf6a', u'35'])
         result = myutils.handle_message(cmndr, u'/show_food', request_body, [u'\ud83c\udf6a'])
         assert result == [u'Default \ud83c\udf6a = 35\nCustom \ud83c\udf6a = 100']
+
+    def test_show_foods(self):
+        cmndr = Commander()
+        foodstore.registerFoodStoreCommands(cmndr)
+        request_body = {'message': {'from': {u'id': 123}}}
+        myutils.handle_message(cmndr, u'/add_food_default', request_body, [u'\ud83c\udf6a', u'100'])
+        myutils.handle_message(cmndr, u'/add_food_default', request_body, [u'\ud83c\udf6b', u'100'])
+        myutils.handle_message(cmndr, u'/add_food', request_body, [u'\ud83c\udf6b', u'20'])
+        result = myutils.handle_message(cmndr, u'/show_foods', request_body, [])
+        assert result == ['Default foods: \n\xf0\x9f\x8d\xaa = 100\n\xf0\x9f\x8d\xab = 100\nCustom foods: \n\xf0\x9f\x8d\xab = 20']
