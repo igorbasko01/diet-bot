@@ -96,8 +96,9 @@ def show_foods(request_body):
     default_foods_pretty = ['{} = {}'.format(x[0], x[1]) for x in default_foods]
     custom_foods_pretty = ['{} = {}'.format(x[0], x[1]) for x in custom_foods]
     all_foods = ['Default foods: '] + default_foods_pretty + ['Custom foods: '] + custom_foods_pretty
+    result = '\n'.join(all_foods)
     
-    return '\n'.join(all_foods)
+    return result.decode('utf-8')
 
 def addFood(request_body, params):
     if len(params) != 2:
