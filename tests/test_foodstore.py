@@ -3,6 +3,7 @@ import unittest
 from commander import Commander
 from google.appengine.ext import ndb
 import myutils
+import userstore
 
 class TestFoodstore(unittest.TestCase):
     nosegae_datastore_v3 = True
@@ -49,3 +50,22 @@ class TestFoodstore(unittest.TestCase):
         result = myutils.handle_message(cmndr, u'/show_foods', request_body, [])
         assert result == [u'Default foods: \n\U0001f36a = 100\n\U0001f36b = 100\nCustom foods: \n\U0001f36b = 20']
         #assert result == [u'Default foods: \n\ud83c\udf6a = 100\n\ud83c\udf6b = 100\nCustom foods: \n\ud83c\udf6b = 20']
+
+    def test_handle_foods_no_max_calories(self):
+        cmndr = Commander()
+        foodstore.registerFoodStoreCommands(cmndr)
+        foodstore.register_handle_foods(cmndr)
+        request_body = {'message': {'from': {u'id': 123}}}
+        result = myutils.handle_message(cmndr, u'\ud83c\udf6a', request_body, [])
+        assert result == ['Sorry, you didn\'t set max calories. Please use /set_max_calories command.']
+
+    def test_handle_foods_got_max_calories(self):
+        cmndr = Commander()
+        foodstore.registerFoodStoreCommands(cmndr)
+        foodstore.register_handle_foods(cmndr)
+        userstore.register_user_commands(cmndr)
+        request_body = {'message': {'from': {u'id': 123}}}
+        myutils.handle_message(cmndr, u'/set_max_calories', request_body, ['2010'])
+        result = myutils.handle_message(cmndr, u'\ud83c\udf6a', request_body, [])
+        assert result == ['Calories counted 100/2010']
+        

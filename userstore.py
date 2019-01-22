@@ -9,7 +9,7 @@ class UserStore(ndb.Model):
 
 def register_user_commands(commander):
     commander.register_command('/set_max_calories', set_max_calories)
-    commander.register_command('/show_max_calories', get_max_calories)
+    commander.register_command('/show_max_calories', reply_max_calories)
 
 
 def set_max_calories(request_body, params):
@@ -27,10 +27,13 @@ def set_max_calories(request_body, params):
 
     return '{}, max calories were updated.'.format(name)
 
-def get_max_calories(request_body):
+def get_max_calories(uid):
+    return ndb.Key('UserStore', uid).get()
+
+def reply_max_calories(request_body):
     uid = myutils.extract_user_id(request_body)
     name = myutils.extract_user_first_name(request_body)
-    user_obj = ndb.Key('UserStore', uid).get()
+    user_obj = get_max_calories(uid)
     if user_obj is None:
         return '{}, sorry but you didn\'t set max calories.'.format(name)
     else:

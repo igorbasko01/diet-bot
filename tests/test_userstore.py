@@ -11,14 +11,14 @@ class TestUserStore(unittest.TestCase):
         user_obj = ndb.Key('UserStore', '742').get()
         assert user_obj.max_calories == 1570
 
-    def test_get_max_calories_empty(self):
-        reply = userstore.get_max_calories({'message': {'date': 1542830400, 'from': {'first_name': 'igor', 'id':'742'}}})
+    def test_reply_max_calories_empty(self):
+        reply = userstore.reply_max_calories({'message': {'date': 1542830400, 'from': {'first_name': 'igor', 'id':'742'}}})
         assert reply == 'igor, sorry but you didn\'t set max calories.'
 
-    def test_get_max_calories(self):
+    def test_reply_max_calories(self):
         request = {'message': {'date': 1542830400, 'from': {'first_name': 'igor', 'id':'742'}}}
         userstore.set_max_calories(request, ['1800'])
-        reply = userstore.get_max_calories(request)
+        reply = userstore.reply_max_calories(request)
         assert reply == 'igor, your max calories is 1800'
 
     def test_set_max_cal_commander(self):
@@ -41,7 +41,7 @@ class TestUserStore(unittest.TestCase):
         set_reply = cmndr.execute('/set_max_calories', request_body, ['200', '2002'])
         assert set_reply == 'Didn\'t fully understand. Should be like: /set_max_calories 1800'
 
-    def test_get_max_cal_comndr(self):
+    def test_reply_max_cal_comndr(self):
         cmndr = Commander()
         userstore.register_user_commands(cmndr)
         request_body = {'message': {'from': {'first_name': 'igor', 'id': '777'}}}
@@ -51,7 +51,7 @@ class TestUserStore(unittest.TestCase):
         show_reply1 = cmndr.execute('/show_max_calories', request_body)
         assert show_reply1 == 'igor, your max calories is 4000'
 
-    def test_get_max_cal_comndr_wrong(self):
+    def test_reply_max_cal_comndr_wrong(self):
         cmndr = Commander()
         userstore.register_user_commands(cmndr)
         request_body = {'message': {'from': {'first_name': 'igor', 'id': '777'}}}

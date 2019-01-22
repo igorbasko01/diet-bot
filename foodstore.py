@@ -3,6 +3,7 @@ import logging
 from google.appengine.ext import ndb
 
 import myutils
+import userstore
 
 # Stores the calories of specific foods.
 # The user_id is stored not only as part of a key,
@@ -18,6 +19,9 @@ def registerFoodStoreCommands(commander):
     commander.register_command('/add_food', add_food_user)
     commander.register_command('/show_food', show_food)
     commander.register_command('/show_foods', show_foods)
+
+def register_handle_foods(commander):
+    commander.register_command(commander.KEY_OTHER, handle_foods)
 
 def add_food_default(request_body, params):
     return add_food(request_body, params, is_user=False)
@@ -83,3 +87,11 @@ def show_foods(request_body):
     result = '\n'.join(all_foods)
     
     return result.decode('utf-8')
+
+def handle_foods(request_body, text):
+    uid = myutils.extract_user_id(request_body)
+    user_obj = userstore.get_max_calories(uid)
+    if user_obj == None:
+        return 'Sorry, you didn\'t set max calories. Please use /set_max_calories command.'
+
+    return 'Calories counted 100/{}'.format(user_obj.max_calories)
