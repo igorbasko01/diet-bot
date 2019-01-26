@@ -128,7 +128,7 @@ def handle_foods(request_body, text):
     for i in range(0, len(text)-1):
         check = text[i]+text[i+1]     # I assume that the emojies are two characters each.
         check_enc = check.encode('utf-8')
-        if check_enc in foods:
+        if check_enc in foods or check in foods:
             calories_consumed += foods[check_enc]
             food_found = True
 
