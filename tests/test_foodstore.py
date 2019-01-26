@@ -54,18 +54,34 @@ class TestFoodstore(unittest.TestCase):
     def test_handle_foods_no_max_calories(self):
         cmndr = Commander()
         foodstore.registerFoodStoreCommands(cmndr)
-        foodstore.register_handle_foods(cmndr)
-        request_body = {'message': {'from': {u'id': 123}}}
+        # foodstore.register_handle_foods(cmndr)
+        request_body = {'message': {'date': 1542830400, 'from': {u'id': 123}}}
+        myutils.handle_message(cmndr, u'/add_food_default', request_body, [u'\ud83c\udf6a', u'100'])
         result = myutils.handle_message(cmndr, u'\ud83c\udf6a', request_body, [])
-        assert result == ['Sorry, you didn\'t set max calories. Please use /set_max_calories command.']
+        assert result == ['Sorry, you didn\'t set max calories. Please use /set_max_calories command.\nCalories counted 100/0']
 
     def test_handle_foods_got_max_calories(self):
         cmndr = Commander()
         foodstore.registerFoodStoreCommands(cmndr)
-        foodstore.register_handle_foods(cmndr)
+        # foodstore.register_handle_foods(cmndr)
         userstore.register_user_commands(cmndr)
-        request_body = {'message': {'from': {u'id': 123}}}
+        request_body = {'message': {'date': 1542830400, 'from': {u'id': 123}}}
         myutils.handle_message(cmndr, u'/set_max_calories', request_body, ['2010'])
         result = myutils.handle_message(cmndr, u'\ud83c\udf6a', request_body, [])
-        assert result == ['Calories counted 100/2010']
+        assert result == ['I got your message! (but I do not know how to answer)']
+
+    def test_handle_foods_default_food(self):
+        cmndr = Commander()
+        foodstore.registerFoodStoreCommands(cmndr)
+        # foodstore.register_handle_foods(cmndr)
+        userstore.register_user_commands(cmndr)
+        request_body = {'message': {'date': 1542830400, 'from': {u'id': 123}}}
+        myutils.handle_message(cmndr, u'/add_food_default', request_body, [u'\ud83c\udf6a', u'100'])
+        myutils.handle_message(cmndr, u'/add_food', request_body, [u'\ud83c\udf6a', u'50'])
+        myutils.handle_message(cmndr, u'/add_food', request_body, [u'\ud83c\udf6b', u'50'])
+        myutils.handle_message(cmndr, u'/add_food_default', request_body, [u'\ud83c\udf6c', u'100'])
+        myutils.handle_message(cmndr, u'/set_max_calories', request_body, ['2010'])
+        result = myutils.handle_message(cmndr, u'here is what I ate:  \ud83c\udf6a\ud83c\udf6c', request_body, [])
+        result = myutils.handle_message(cmndr, u'and again:  \ud83c\udf6c', request_body, [])
+        assert result == ['Calories counted 250/2010']
         

@@ -42,6 +42,7 @@ class Commander:
             try:
                 reply = func(request_body, text)
             except TypeError, e:
+                print(e)
                 reply = func(request_body)
             replies += [reply]
         return replies
