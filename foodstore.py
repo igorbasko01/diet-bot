@@ -128,8 +128,9 @@ def handle_foods(request_body, text):
     logging.info(foods)
     logging.info(text)
     logging.info(len(text))
-    for i in range(0, len(text)-1):
-        check = text[i]+text[i+1]     # I assume that the emojies are two characters each.
+    len_text = len(text)
+    for i in range(0, len_text):
+        check = text[i]+text[i+1] if i < len_text-1 else text[i]
         check_enc = check.encode('utf-8')
         logging.info(check)
         logging.info(check_enc)
