@@ -126,6 +126,8 @@ def handle_foods(request_body, text):
     calories_consumed = 0
     food_found = False
     logging.info(foods)
+    logging.info(text)
+    logging.info(len(text))
     for i in range(0, len(text)-1):
         check = text[i]+text[i+1]     # I assume that the emojies are two characters each.
         check_enc = check.encode('utf-8')
