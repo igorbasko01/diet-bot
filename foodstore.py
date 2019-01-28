@@ -130,13 +130,21 @@ def handle_foods(request_body, text):
     logging.info(len(text))
     len_text = len(text)
     for i in range(0, len_text):
-        check = text[i]+text[i+1] if i < len_text-1 else text[i]
+        check = text[i]
         check_enc = check.encode('utf-8')
         logging.info(check)
         logging.info(check_enc)
         if check_enc in foods or check in foods:
             calories_consumed += foods[check_enc]
             food_found = True
+        if i < len_text-1:
+            check = text[i]+text[i+1] # if i < len_text-1 else text[i]
+            check_enc = check.encode('utf-8')
+            logging.info(check)
+            logging.info(check_enc)
+            if check_enc in foods or check in foods:
+                calories_consumed += foods[check_enc]
+                food_found = True
 
     # If no food found, maybe it was only text or not food tracking at all.
     if not food_found:

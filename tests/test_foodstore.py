@@ -84,4 +84,14 @@ class TestFoodstore(unittest.TestCase):
         result = myutils.handle_message(cmndr, u'here is what I ate:  \ud83c\udf6a\ud83c\udf6c', request_body, [])
         result = myutils.handle_message(cmndr, u'and again:  \ud83c\udf6c', request_body, [])
         assert result == ['Calories counted 250/2010']
-        
+
+    def test_handle_foods_multiple_foods(self):
+        cmndr = Commander()
+        foodstore.registerFoodStoreCommands(cmndr)
+        # foodstore.register_handle_foods(cmndr)
+        userstore.register_user_commands(cmndr)
+        request_body = {'message': {'date': 1542830400, 'from': {u'id': 123}}}
+        myutils.handle_message(cmndr, u'/add_food_default', request_body, [u'\U0001f36b', u'100'])
+        myutils.handle_message(cmndr, u'/set_max_calories', request_body, ['2010'])
+        result = myutils.handle_message(cmndr, u'\U0001f36b\U0001f36b', request_body, [])
+        assert result == ['Calories counted 200/2010']
