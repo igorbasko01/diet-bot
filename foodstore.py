@@ -105,6 +105,15 @@ def get_foods(user_id):
 
     return foods
 
+def get_food_calorie(check_food, foods):
+    check_enc = check_food.encode('utf-8')
+    logging.info(check_food)
+    logging.info(check_enc)
+    if check_enc in foods or check_food in foods:
+        return foods[check_enc]
+    return 0
+    
+
 def handle_foods(request_body, text):
     uid = myutils.extract_user_id(request_body)
     user_obj = userstore.get_max_calories(uid)
@@ -124,30 +133,20 @@ def handle_foods(request_body, text):
         foods[food[0]] = food[1]
 
     calories_consumed = 0
-    food_found = False
     logging.info(foods)
     logging.info(text)
     logging.info(len(text))
     len_text = len(text)
+    # Iterate through the message and try to find emojis
     for i in range(0, len_text):
-        check = text[i]
-        check_enc = check.encode('utf-8')
-        logging.info(check)
-        logging.info(check_enc)
-        if check_enc in foods or check in foods:
-            calories_consumed += foods[check_enc]
-            food_found = True
-        if i < len_text-1:
-            check = text[i]+text[i+1] # if i < len_text-1 else text[i]
-            check_enc = check.encode('utf-8')
-            logging.info(check)
-            logging.info(check_enc)
-            if check_enc in foods or check in foods:
-                calories_consumed += foods[check_enc]
-                food_found = True
+        # Emojis can be one character long or two, so first check if it is
+        # a single character emoji, if not try two characters.
+        calories_consumed += get_food_calorie(text[i], foods)
+        # Try two characters
+        calories_consumed += get_food_calorie(text[i]+text[i+1], foods) if i < len_text-1 else 0
 
     # If no food found, maybe it was only text or not food tracking at all.
-    if not food_found:
+    if calories_consumed == 0:
         return ''
 
     date = myutils.extract_date(request_body)
