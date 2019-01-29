@@ -22,6 +22,7 @@ import myutils
 import botenabler
 import coffeestore
 import userstore
+import waterstore
 from commander import Commander
 
 TOKEN = bottoken.get_token()
@@ -32,6 +33,7 @@ commander = Commander()
 foodstore.registerFoodStoreCommands(commander)
 coffeestore.registerCoffeeCommands(commander)
 userstore.register_user_commands(commander)
+waterstore.registerWaterCommands(commander)
 
 # ================================
 
