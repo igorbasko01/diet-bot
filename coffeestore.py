@@ -12,9 +12,9 @@ def registerCoffeeCommands(commander):
     commander.register_command('/coffeeupd', update_coffee)
     commander.register_command(commander.KEY_OTHER, handle_coffee)
 
-def getCoffeeKey(name, date):
+def getCoffeeKey(uid, date):
     date_got = datetime.datetime.fromtimestamp(int(date)).strftime("%Y-%m-%d")
-    key = '{}:coffee:{}'.format(name, date_got)
+    key = '{}:coffee:{}'.format(uid, date_got)
     return key
 
 def getCoffeeAmount(key):
@@ -22,15 +22,16 @@ def getCoffeeAmount(key):
 
 
 def handle_coffee(request_body, text):
-    coffees = text.count(u'\u2615\ufe0f')
+    coffees = text.count(u'\u2615')
     if coffees == 0:
         return ''
 
     name = myutils.extract_user_first_name(request_body)
+    uid = myutils.extract_user_id(request_body)
     date = myutils.extract_date(request_body)
 
     smilies = [u'\ud83d\ude43',u'\ud83d\ude0f',u'\ud83d\ude31',u'\ud83d\ude21']
-    key = getCoffeeKey(name, date)
+    key = getCoffeeKey(uid, date)
     queryCoffee = getCoffeeAmount(key)
 
     logging.info('key: ' + key)
@@ -63,10 +64,11 @@ def update_coffee(request_body, params):
         return 'Didn\'t fully understand. Should be like: /coffeeupd 2'
 
     name = myutils.extract_user_first_name(request_body)
+    uid = myutils.extract_user_id(request_body)
     date = myutils.extract_date(request_body)
     amount = int(params[0])
 
-    key = getCoffeeKey(name, date)
+    key = getCoffeeKey(uid, date)
     coffeeDrank = CoffeeStore(key=ndb.Key('CoffeeStore', key),timesDrank=amount)
     coffeeDrank.put()
 

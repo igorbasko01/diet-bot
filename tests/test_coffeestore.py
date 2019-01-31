@@ -7,11 +7,11 @@ class TestCoffeestore(unittest.TestCase):
     nosegae_datastore_v3 = True
 
     def test_get_coffee_key(self):
-        key = coffeestore.getCoffeeKey('igor', '1542830400')
-        assert key == 'igor:coffee:2018-11-21'
+        key = coffeestore.getCoffeeKey(123, '1542830400')
+        assert key == '123:coffee:2018-11-21'
 
     def test_get_coffee_amount(self):
-        key = coffeestore.getCoffeeKey('igor', '1542830400')
+        key = coffeestore.getCoffeeKey(123, '1542830400')
         coffeeDrank = coffeestore.CoffeeStore(key=ndb.Key('CoffeeStore', key),timesDrank=3)
         coffeeDrank.put()
         coffeeResult = coffeestore.getCoffeeAmount(key)
@@ -37,8 +37,8 @@ class TestCoffeestore(unittest.TestCase):
     def test_update_coffee(self):
         cmndr = Commander()
         coffeestore.registerCoffeeCommands(cmndr)
-        cmndr.execute('/coffeeupd', {'message': {'date': 1542830400, 'from': {'first_name': 'igor'}}}, ['10'])
-        key = coffeestore.getCoffeeKey('igor', '1542830400')
+        cmndr.execute('/coffeeupd', {'message': {'date': 1542830400, 'from': {'first_name': 'igor', 'id': 123}}}, ['10'])
+        key = coffeestore.getCoffeeKey(123, '1542830400')
         coffee_amount = coffeestore.getCoffeeAmount(key)
         assert coffee_amount.timesDrank == 10
         
