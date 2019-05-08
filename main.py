@@ -112,7 +112,7 @@ class WebhookHandler(webapp2.RequestHandler):
             return u'''
             Hi {},
             Thanks for choosing me for your calories tracking.
-            To log a food that you've eaten, just send \ud83c\uudf55 or any
+            To log a food that you've eaten, just send \ud83c\udf55 or any
             food that you prefer.
             To track coffee intake, just send \u2615, it also will
             track the calories of the coffee.
