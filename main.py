@@ -112,11 +112,11 @@ class WebhookHandler(webapp2.RequestHandler):
             return u'''
             Hi {},
             Thanks for choosing me for your calories tracking.
-            To log a food that you've eaten, just send \u1F355 or any
+            To log a food that you've eaten, just send \ud83c\uudf55 or any
             food that you prefer.
             To track coffee intake, just send \u2615, it also will
             track the calories of the coffee.
-            To log water intake, just send \u1F376.
+            To log water intake, just send \ud83c\udf76.
             And of course all the emojis can be combined in one message.
             To list the caloric value of all available foods to track
             send the /show_foods command.
