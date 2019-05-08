@@ -109,7 +109,7 @@ class WebhookHandler(webapp2.RequestHandler):
             logging.info(resp)
 
         def help_msg(name):
-            return '''
+            return u'''
             Hi {},
             Thanks for choosing me for your calories tracking.
             To log a food that you've eaten, just send \u1F355 or any
