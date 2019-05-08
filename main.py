@@ -108,7 +108,7 @@ class WebhookHandler(webapp2.RequestHandler):
             logging.info('send response:')
             logging.info(resp)
 
-        def help_msg():
+        def help_msg(name):
             return '''
             Hi {},
             Thanks for choosing me for your calories tracking.
@@ -137,12 +137,10 @@ class WebhookHandler(webapp2.RequestHandler):
             if text == '/start':
                 reply('Bot enabled')
                 botenabler.setEnabled(chat_id, True)
+                reply(help_msg(name))
             elif text == '/stop':
                 reply('Bot disabled')
                 botenabler.setEnabled(chat_id, False)
-
-
-        # CUSTOMIZE FROM HERE
 
 
 app = webapp2.WSGIApplication([
