@@ -32,6 +32,11 @@ def extract_user_id(request_body):
     return message.get('from').get('id')
 
 
+def extract_chat_id(request_body):
+    message = extract_message(request_body)
+    return message.get('chat').get('id')
+
+
 def handle_message(commander, cmd, request_body, params):
     if commander.has_command(cmd):
         return [commander.execute(cmd, request_body, params)]

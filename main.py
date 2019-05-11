@@ -30,6 +30,7 @@ TOKEN = bottoken.get_token()
 BASE_URL = 'https://api.telegram.org/bot' + TOKEN + '/'
 
 commander = Commander()
+botenabler.register_user_commands(commander)
 foodstore.registerFoodStoreCommands(commander)
 coffeestore.registerCoffeeCommands(commander)
 userstore.register_user_commands(commander)
@@ -108,23 +109,6 @@ class WebhookHandler(webapp2.RequestHandler):
             logging.info('send response:')
             logging.info(resp)
 
-        def help_msg(name):
-            return u'''
-            Hi {},
-            Thanks for choosing me for your calories tracking.
-            To log a food that you've eaten, just send \ud83c\udf55 or any
-            food that you prefer.
-            To track coffee intake, just send \u2615, it also will
-            track the calories of the coffee.
-            To log water intake, just send \ud83c\udf76.
-            And of course all the emojis can be combined in one message.
-            To list the caloric value of all available foods to track
-            send the /show_foods command.
-            To change the caloric value of a food or add another food
-            for tracking use the /add_food command.
-            There are some more commands, feel free to explore.
-            '''.format(name)
-
         cmd, params = myutils.split_text(text)
         params_encoded = [ x.encode('utf-8') for x in params]
 
@@ -134,11 +118,7 @@ class WebhookHandler(webapp2.RequestHandler):
             reply(r)
 
         if text.startswith('/'):
-            if text == '/start':
-                reply('Bot enabled')
-                botenabler.setEnabled(chat_id, True)
-                reply(help_msg(name))
-            elif text == '/stop':
+            if text == '/stop':
                 reply('Bot disabled')
                 botenabler.setEnabled(chat_id, False)
 

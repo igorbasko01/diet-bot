@@ -32,4 +32,9 @@ class TestMyutils(unittest.TestCase):
         cmd, params = myutils.split_text(u'/coffeeupd 2')
         replies = myutils.handle_message(cmndr, cmd, {'message': {'date': 1542830400, 'from': {'first_name': 'igor'}}}, params)
         assert replies[0] == 'igor, the coffee amount was updated.'
+
+
+    def test_extract_chat_id(self):
+        req_bdy = {'message': {'chat': {'id': 5555}}}
+        assert myutils.extract_chat_id(req_bdy) == 5555
         

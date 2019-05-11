@@ -2,7 +2,6 @@ from google.appengine.ext import ndb
 
 import logging
 import myutils
-import logging
 
 class UserStore(ndb.Model):
     max_calories = ndb.IntegerProperty()
