@@ -117,11 +117,6 @@ class WebhookHandler(webapp2.RequestHandler):
         for r in replies:
             reply(r)
 
-        if text.startswith('/'):
-            if text == '/stop':
-                reply('Bot disabled')
-                botenabler.setEnabled(chat_id, False)
-
 
 app = webapp2.WSGIApplication([
     ('/me', MeHandler),
