@@ -6,6 +6,7 @@ import myutils
 class EnableStatus(ndb.Model):
     # key name: str(chat_id)
     enabled = ndb.BooleanProperty(indexed=False, default=False)
+    join_date = ndb.DateTimeProperty(auto_now_add=True)
 
 
 def register_user_commands(commander):
