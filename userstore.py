@@ -5,6 +5,7 @@ import myutils
 
 class UserStore(ndb.Model):
     max_calories = ndb.IntegerProperty()
+    join_date = ndb.DateTimeProperty(auto_now_add=True)
 
 def register_user_commands(commander):
     commander.register_command('/set_max_calories', set_max_calories)
